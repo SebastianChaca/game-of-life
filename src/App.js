@@ -43,25 +43,26 @@ function App() {
     interval=setInterval(()=>{
       setGrid(g => {
         return produce(g, gridCopy => {
-          for (let i = 0; i <rowsNum; i++) {
-            for (let k = 0; k < colsNum; k++) {
-              let neighbors = 0;
+          g.map((rows, i)=>
+            rows.map((cols, j)=>{
+              let neighbors = 0 
               operations.forEach(([x, y]) => {
                 const newI = i + x;
-                const newK = k + y;
-                if (newI >= 0 && newI < rowsNum && newK >= 0 && newK < colsNum) {
-                  neighbors += g[newI][newK];
+                const newJ = j + y;
+                if (newI >= 0 && newI < rowsNum && newJ >= 0 && newJ < colsNum) {
+                  neighbors += g[newI][newJ];
                 }
               });
   
               if (neighbors < 2 || neighbors > 3) {
-                gridCopy[i][k] = 0;
-              } else if (g[i][k] === 0 && neighbors === 3) {
-                gridCopy[i][k] = 1;
+                gridCopy[i][j] = 0;
+              } else if (g[i][j] === 0 && neighbors === 3) {
+                gridCopy[i][j] = 1;
               }
-            }
-          }
-        });
+            })
+          )
+        })
+          
       });
       setGeneration((generation)=> generation + 1)       
     }, intervalLoop)
