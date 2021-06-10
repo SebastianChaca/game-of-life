@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-
+import produce from "immer";
 import {SimpleGrid, Box, Flex, Spacer, Button, Text} from '@chakra-ui/react'
 import {SettingsIcon} from '@chakra-ui/icons'
 import Cell from './Components/Cell';
@@ -41,26 +41,28 @@ function App() {
   let interval=null
    if(running){
     interval=setInterval(()=>{
-      const newGrid=[...grid]
-      for (let i = 0; i < rowsNum; i++) {
-        for (let j = 0; j < colsNum; j++) {
-          let neighbors = 0;
-          operations.forEach(([x, y]) => {
-            const newI = i + x;
-            const newJ = j + y;
-            if (newI >= 0 && newI < rowsNum && newJ >= 0 && newJ < colsNum) {
-              neighbors += grid[newI][newJ];
+      setGrid(g => {
+        return produce(g, gridCopy => {
+          for (let i = 0; i <rowsNum; i++) {
+            for (let k = 0; k < colsNum; k++) {
+              let neighbors = 0;
+              operations.forEach(([x, y]) => {
+                const newI = i + x;
+                const newK = k + y;
+                if (newI >= 0 && newI < rowsNum && newK >= 0 && newK < colsNum) {
+                  neighbors += g[newI][newK];
+                }
+              });
+  
+              if (neighbors < 2 || neighbors > 3) {
+                gridCopy[i][k] = 0;
+              } else if (g[i][k] === 0 && neighbors === 3) {
+                gridCopy[i][k] = 1;
+              }
             }
-            });
-           
-            if (neighbors < 2 || neighbors > 3) {
-             newGrid[i][j] = 0;
-            } else if (grid[i][j] === 0 && neighbors === 3) {
-             newGrid[i][j] = 1;
-            }
-        }
-      }
-      setGrid(newGrid)
+          }
+        });
+      });
       setGeneration((generation)=> generation + 1)       
     }, intervalLoop)
    }
