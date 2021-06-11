@@ -1,6 +1,6 @@
 import React from 'react'
 import {Button} from '@chakra-ui/react'
-const Btn = ({title, handleFunction, running}) => {
+const Btn = ({title, handleFunction}) => {
   return (
     <Button
       onClick={()=>{ handleFunction()}} 
@@ -11,7 +11,7 @@ const Btn = ({title, handleFunction, running}) => {
       _hover={{bg:'#93D5E7'}}
     >
       {
-        title === 'Start' ? running ? "Stop" : "Start" : title
+        title 
       }
     </Button>
   )

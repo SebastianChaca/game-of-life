@@ -1,34 +1,32 @@
 import React, {useState, useEffect} from 'react';
 import produce from "immer";
-import {SimpleGrid, Box, Flex, Spacer, Button, Text} from '@chakra-ui/react'
-import {SettingsIcon} from '@chakra-ui/icons'
+import {SimpleGrid, Box, Flex, Spacer,  useDisclosure} from '@chakra-ui/react'
+import Settings from './Components/Settings/Settings';
 import Cell from './Components/Cell';
 import Btn from './Components/Btn'
-import  TextComp from './Components/TextComp';
-const operations = [
-  [0, 1],
-  [0, -1],
-  [1, -1],
-  [-1, 1],
-  [1, 1],
-  [-1, -1],
-  [1, 0],
-  [-1, 0]
-];
+import TextComp from './Components/TextComp';
+import {generateGrid, restartGrid} from './Utils/'
+import ModalSetting from './Components/Settings/ModalSetting';
 
-function App() {
-  const restartGrid= ()=>{    
-   return Array.from({length: rowsNum}).map(() => Array.from({length: colsNum}).fill(0))
-  }
+
+function App() {  
   const [intervalLoop, setIntervalLoop]=useState(1000)
   const [generation, setGeneration]=useState(0)
   const [running, setRunning]=useState(false)
+  const [screenWidth, setScreenWidth]=useState(null)
   const [rowsNum, setRows]=useState(25)
   const [colsNum, setCols]=useState(50)
   const [grid, setGrid] = useState(() => {
-    return restartGrid()
+    return restartGrid(rowsNum, colsNum)
   });
-
+  const { isOpen, onOpen, onClose } = useDisclosure()
+ 
+  useEffect(()=>{
+    const handleWindowResize = () => setScreenWidth(window.innerWidth)
+    window.addEventListener("resize", handleWindowResize)    
+    return () => window.removeEventListener("resize", handleWindowResize);
+  })
+  
   useEffect(()=>{
     const getGrid= localStorage.getItem('grid') ? JSON.parse(localStorage.getItem('grid')): null
     if (getGrid){
@@ -43,24 +41,7 @@ function App() {
     interval=setInterval(()=>{
       setGrid(g => {
         return produce(g, gridCopy => {
-          g.map((rows, i)=>
-            rows.map((cols, j)=>{
-              let neighbors = 0 
-              operations.forEach(([x, y]) => {
-                const newI = i + x;
-                const newJ = j + y;
-                if (newI >= 0 && newI < rowsNum && newJ >= 0 && newJ < colsNum) {
-                  neighbors += g[newI][newJ];
-                }
-              });
-  
-              if (neighbors < 2 || neighbors > 3) {
-                gridCopy[i][j] = 0;
-              } else if (g[i][j] === 0 && neighbors === 3) {
-                gridCopy[i][j] = 1;
-              }
-            })
-          )
+          return generateGrid(g, rowsNum, colsNum, gridCopy)
         })
           
       });
@@ -70,41 +51,46 @@ function App() {
    return ()=>{
      clearInterval(interval)
    }
-  },[running])  
-  
+  },[running])    
   
   const handleRunning=()=>{
     setRunning(!running);   
   }
   
   const handleReset=()=>{
-    setGrid(restartGrid())
+    setGrid(restartGrid(colsNum, rowsNum))
     setGeneration(0)
     localStorage.removeItem('grid')
   }
-  
-  
-
+ 
   return (
-    <Box w='1250px' m='auto' pt='20px'>    
-      <Flex alignItems='center' >
-          <Btn title='Start' running={running} handleFunction={handleRunning} />
+    <Box   m='auto' p='20px'>    
+      <Flex alignItems='center' display={{base:'block', sm:'block', md:'flex', lg:'flex'}} >
+          <Btn title={running ? 'Stop' : 'Start'} handleFunction={handleRunning} />
           <Btn title='Restart' handleFunction={handleReset}/>        
           <TextComp title='Interval' state={intervalLoop}/>
           <TextComp title='Generation' state={generation}/>
         <Spacer/>
-          <Button bg='#2CC8F2' color='#FFF' _hover={{bg:'#93D5E7'}}>
-            <Flex justifyContent='center' alignItems='center'>
-              <SettingsIcon/> 
-                <Text mb='2px' ml='3px'>Settings</Text>
-            </Flex>
-          </Button>
+          <ModalSetting 
+            isOpen={isOpen} 
+            onClose={onClose} 
+            rows={rowsNum} 
+            cols={colsNum}
+            intervalLoop={intervalLoop}
+            setIntervalLoop={setIntervalLoop} 
+            setRows={setRows} 
+            setCols={setCols}
+            setGrid={setGrid}              
+            />
+          <Settings onOpen={onOpen}/>
       </Flex>
-      <SimpleGrid columns={colsNum} spacing='5px' minChildWidth='20px' pt='20px' mb='20px'>      
-        {grid.map( (rows, i) =>
-          rows.map((col, j) => <Cell i={i} j={j} grid={grid} setGrid={setGrid} key={j + i} />)
-        )}
-      </SimpleGrid>
+      <Box m='auto'  w={25 * colsNum}>
+        <SimpleGrid columns={colsNum} spacing='5px' minChildWidth='20px' pt='20px' mb='20px'>      
+          {grid.map( (rows, i) =>
+            rows.map((col, j) => <Cell i={i} j={j} grid={grid} setGrid={setGrid} key={j + i} />)
+          )}
+        </SimpleGrid>
+      </Box>
     </Box>
   );
 }
