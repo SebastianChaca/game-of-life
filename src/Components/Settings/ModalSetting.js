@@ -65,7 +65,7 @@ const ModalSetting = ({isOpen, onClose, rows, cols,intervalLoop, setIntervalLoop
       </ModalBody>
       
       <ModalFooter m='auto' w='100%' >
-        <Button w='100%' colorScheme="blue" mr={3} onClick={onClose}>
+        <Button w='100%' colorScheme="blue" m='auto' onClick={onClose}>
           Close
         </Button>
        

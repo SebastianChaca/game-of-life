@@ -7,7 +7,8 @@ const BtnSettings = ({icon, handleFunction}) => {
               color='#FFF'              
               size="sm"
               icon={icon}
-              m='5px'
+              mx='5px'
+              mb='15px'
               onClick={()=>{handleFunction()}}
               />
   )
