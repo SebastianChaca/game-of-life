@@ -13,7 +13,7 @@ function App() {
   const [intervalLoop, setIntervalLoop]=useState(1000)
   const [generation, setGeneration]=useState(0)
   const [running, setRunning]=useState(false)
-  const [screenWidth, setScreenWidth]=useState(null)
+
   const [rowsNum, setRows]=useState(25)
   const [colsNum, setCols]=useState(50)
   const [grid, setGrid] = useState(() => {
@@ -21,12 +21,7 @@ function App() {
   });
   const { isOpen, onOpen, onClose } = useDisclosure()
  
-  useEffect(()=>{
-    const handleWindowResize = () => setScreenWidth(window.innerWidth)
-    window.addEventListener("resize", handleWindowResize)    
-    return () => window.removeEventListener("resize", handleWindowResize);
-  })
-  
+ 
   useEffect(()=>{
     const getGrid= localStorage.getItem('grid') ? JSON.parse(localStorage.getItem('grid')): null
     if (getGrid){
@@ -61,8 +56,9 @@ function App() {
     setGrid(restartGrid(colsNum, rowsNum))
     setGeneration(0)
     localStorage.removeItem('grid')
+    console.log(grid)
   }
- 
+
   return (
     <Box   m='auto' p='20px'>    
       <Flex alignItems='center' display={{base:'block', sm:'block', md:'flex', lg:'flex'}} >
@@ -80,7 +76,8 @@ function App() {
             setIntervalLoop={setIntervalLoop} 
             setRows={setRows} 
             setCols={setCols}
-            setGrid={setGrid}              
+            setGrid={setGrid}
+                        
             />
           <Settings onOpen={onOpen}/>
       </Flex>

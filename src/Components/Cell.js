@@ -1,11 +1,13 @@
 import React from 'react'
 import {Box } from '@chakra-ui/react'
+import produce from 'immer'
 const Cell = ({i, j, grid, setGrid}) => {
   return (
     <Box 
       onClick={()=> {
-        const newGrid=[...grid]
-        newGrid[i][j]= grid[i][j] ? 0 : 1
+        const newGrid = produce(grid, gridCopy => {
+                  gridCopy[i][j] = grid[i][j] ? 0 : 1;
+                });
         localStorage.setItem('grid', JSON.stringify(newGrid))
         setGrid(newGrid)
       }} 

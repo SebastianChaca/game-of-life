@@ -15,6 +15,7 @@ import {AddIcon, MinusIcon} from '@chakra-ui/icons'
 import TextComp from '../TextComp'
 import BtnSettings from './BtnSettings'
 import {restartGrid} from '../../Utils/'
+
 const ModalSetting = ({isOpen, onClose, rows, cols,intervalLoop, setIntervalLoop, setRows, setCols, setGrid}) => {
 
   const add=(set, state, title)=>{
@@ -34,15 +35,16 @@ const ModalSetting = ({isOpen, onClose, rows, cols,intervalLoop, setIntervalLoop
   useEffect(()=>{
     setGrid(restartGrid(rows, cols)) 
   },[rows, cols])
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} >
     <ModalOverlay />
     <ModalContent >
-      <ModalHeader>Settings</ModalHeader>
+      <ModalHeader m='auto'>Settings</ModalHeader>
       <ModalCloseButton />
       
-      <ModalBody>
-      <Flex alignItems='center'>     
+      <ModalBody w='70%' m='auto'>
+      <Flex alignItems='center' >     
           <TextComp title={'Rows'} state={rows}/>
           <Spacer/>
           <BtnSettings icon={<AddIcon/>} handleFunction={()=>add(setRows, rows)}/>
@@ -53,7 +55,7 @@ const ModalSetting = ({isOpen, onClose, rows, cols,intervalLoop, setIntervalLoop
           <Spacer/>
           <BtnSettings icon={<AddIcon/>}  handleFunction={()=>add(setCols, cols)}/>
           <BtnSettings icon={<MinusIcon/>} handleFunction={()=>sub(setCols, cols)} />              
-      </Flex>
+      </Flex>     
       <Flex alignItems='center'>     
           <TextComp title={'Interval'} state={intervalLoop}/>
           <Spacer/>
@@ -62,11 +64,11 @@ const ModalSetting = ({isOpen, onClose, rows, cols,intervalLoop, setIntervalLoop
       </Flex>
       </ModalBody>
       
-      <ModalFooter>
-        <Button colorScheme="blue" mr={3} onClick={onClose}>
+      <ModalFooter m='auto' w='100%' >
+        <Button w='100%' colorScheme="blue" mr={3} onClick={onClose}>
           Close
         </Button>
-        <Button variant="ghost">Secondary Action</Button>
+       
       </ModalFooter>
     </ModalContent>
   </Modal>
