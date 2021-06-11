@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import produce from "immer";
-import {SimpleGrid, Box, Flex, Spacer,  useDisclosure, Button} from '@chakra-ui/react'
+import {SimpleGrid, Box, Flex, Spacer,  useDisclosure} from '@chakra-ui/react'
 import Settings from './Components/Settings/Settings';
 import Cell from './Components/Cell';
 import Btn from './Components/Btn'
