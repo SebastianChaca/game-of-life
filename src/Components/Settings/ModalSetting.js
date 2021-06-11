@@ -13,11 +13,12 @@ import {
 } from "@chakra-ui/react"
 import {AddIcon, MinusIcon} from '@chakra-ui/icons'
 import TextComp from '../TextComp'
+import {ColorModeSwitcher} from '../../ColorModeSwitcher'
 import BtnSettings from './BtnSettings'
 import {restartGrid} from '../../Utils/'
 
 const ModalSetting = ({isOpen, onClose, rows, cols,intervalLoop, setIntervalLoop, setRows, setCols, setGrid}) => {
-
+  // funciones para modificar el estado de la grid y el intervalo
   const add=(set, state, title)=>{
     if(title === 'Interval'){
       set(state + 100)
@@ -32,6 +33,7 @@ const ModalSetting = ({isOpen, onClose, rows, cols,intervalLoop, setIntervalLoop
       set(state - 1)
     }
   }
+  //efecto que chequea si hay cambios en las columnas y filas y crea una nueva grilla con estos valores
   useEffect(()=>{
     setGrid(restartGrid(rows, cols)) 
   },[rows, cols])
@@ -61,6 +63,11 @@ const ModalSetting = ({isOpen, onClose, rows, cols,intervalLoop, setIntervalLoop
           <Spacer/>
           <BtnSettings icon={<AddIcon/>} handleFunction={()=>add(setIntervalLoop, intervalLoop, 'Interval')}/>
           <BtnSettings icon={<MinusIcon/>}  handleFunction={()=>sub(setIntervalLoop, intervalLoop, 'Interval')}/>              
+      </Flex>
+      <Flex alignItems='center'>     
+          <TextComp title={'Color Theme'} state={intervalLoop}/>
+          <Spacer/>
+          <ColorModeSwitcher/>           
       </Flex>
       </ModalBody>
       

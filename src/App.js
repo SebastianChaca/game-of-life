@@ -11,18 +11,26 @@ import {generateGrid, restartGrid,} from './Utils/'
 
 
 function App() {  
+  //estado decantidad de intervalos en cada iteracion
   const [intervalLoop, setIntervalLoop]=useState(1000)
+  //estado que cuenta la cantidad de iteraciones realizadas
   const [generation, setGeneration]=useState(0)
+  //estado para iniciar o detener el juego
   const [running, setRunning]=useState(false)
+  //estados de las filas y columnas
   const [rowsNum, setRows]=useState(25)
   const [colsNum, setCols]=useState(50)
+  //estado de la grilla
   const [grid, setGrid] = useState(() => {
     return restartGrid(rowsNum, colsNum)
   });
-  const [modalPatterns, setModalPatterns]=useState(false)
+  //estado para abrir o cerrar el modal de chakra, esta funcion viene con chakra
   const { isOpen, onOpen, onClose } = useDisclosure()
+  //estado para abrir modal de chakra, hice uno aparte para tener los dos modales
+  //en este archivo y evitar mas prop drilling
+  const [modalPatterns, setModalPatterns]=useState(false)
  
- 
+ //efecto que chequea si hay una grid guardada en local storage y de ser así genera una con esos datos almacenados
   useEffect(()=>{
     const getGrid= localStorage.getItem('grid') ? JSON.parse(localStorage.getItem('grid')): null
     if (getGrid){
@@ -31,11 +39,16 @@ function App() {
     }
   },[])
 
+//efecto que chequea el estado de running para disparar una funcion de intervalos 
+//que dispara el agoritmo del juego
   useEffect(()=>{
   let interval=null
    if(running){
     interval=setInterval(()=>{
       setGrid(g => {
+        //la funcion produce de immer recibe el estado de la grilla sin mutarlo y 
+        //genera un nuevo estado  con los nuevos valores
+        //https://immerjs.github.io/immer/produce
         return produce(g, gridCopy => {
           return generateGrid(g, rowsNum, colsNum, gridCopy)
         })
@@ -49,6 +62,7 @@ function App() {
    }
   },[running])    
   
+  // distintos handelers para estados
   const handleRunning=()=>{
     setRunning(!running);   
   }
@@ -93,8 +107,9 @@ function App() {
           <Btn title={'Patterns'} handleFunction={handlePatternsModal}/>
           <Settings onOpen={onOpen}/>
       </Flex>
+      {/* div que contiene la grid, su width es dinamico dependiendo el numero de columnas */}
       <Box m='auto'  w={25 * colsNum}>
-        <SimpleGrid columns={colsNum} spacing='5px' minChildWidth='20px' pt='20px' mb='20px'>      
+        <SimpleGrid columns={colsNum} spacing='5px' minChildWidth='20px' pt='20px' mb='20px'>
           {grid.map( (rows, i) =>
             rows.map((col, j) => <Cell i={i} j={j} grid={grid} setGrid={setGrid} key={j + i} />)
           )}

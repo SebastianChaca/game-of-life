@@ -16,8 +16,10 @@ import {
 import {restartGrid ,generatePatternToad, generatePatternBlinker} from '../../Utils/'
 
 const ModalPatterns = ({isOpen, onClose, rows, cols, setGrid}) => {
+  //estado del radio button group
   const [value, setValue] = useState(null)
-
+//efecto que depende del estado del button group, dependiendo el valor
+//se crea una nueva grilla con el patron correspondiente
   useEffect(()=>{
   setGrid(restartGrid(rows, cols))
    if(value=== '1'){

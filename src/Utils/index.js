@@ -1,8 +1,11 @@
+// funcion que crea un array basado en el numero de filas
+//que a su vez en cada elemento se crea otro array basado en el numero de columnas
+//que luego al ser mapeado en el componente grid crea la grilla del juego
 export const restartGrid= (rowsNum, colsNum)=>{    
   return Array.from({length: rowsNum}).map(() => Array.from({length: colsNum}).fill(0))
  }
 
-
+//operaciones que se le agregan a los index i y j para chequear el valor de sus vecinos
 const operations = [
   [0, 1],
   [0, -1],
@@ -18,15 +21,22 @@ export const generateGrid=(g, rowsNum, colsNum, gridCopy)=>{
     rows.map((cols, j)=>{
       let neighbors = 0 
       operations.forEach(([x, y]) => {
+        //esto equivale a :
+        // if(gridCopy[i - 1][j - 1 ] === 1){
+        // neighbors += 1 }
+        // asi evito hacer las 8 operaciones
         const newI = i + x;
         const newJ = j + y;
+        //validacion para que no se chequeen los index que estan en los limites de la grilla
+        //no pude hacer la grilla esferica asi que encontre esta forma de darle limites        
         if (newI >= 0 && newI < rowsNum && newJ >= 0 && newJ < colsNum) {
           neighbors += g[newI][newJ];
         }
       });
-
+      //si tiene menos de dos vecinos o mas de 3 la celula muere
       if (neighbors < 2 || neighbors > 3) {
         gridCopy[i][j] = 0;
+      //si la celula esta muerta y tiene mas de 3 vecinos se reproduce
       } else if (g[i][j] === 0 && neighbors === 3) {
         gridCopy[i][j] = 1;
       }
@@ -34,6 +44,8 @@ export const generateGrid=(g, rowsNum, colsNum, gridCopy)=>{
   )
  }
 
+
+// patrones predeterminados
  export const generatePatternToad=(g, rowsNum, colsNum, gridCopy)=>{
   g.map((rows, i)=>
   rows.map((cols, j)=>{
@@ -58,6 +70,7 @@ export const generateGrid=(g, rowsNum, colsNum, gridCopy)=>{
   })
 )
 }
+
 export const generatePatternBlinker=(g, rowsNum, colsNum, gridCopy)=>{
   g.map((rows, i)=>
   rows.map((cols, j)=>{
@@ -75,109 +88,4 @@ export const generatePatternBlinker=(g, rowsNum, colsNum, gridCopy)=>{
 )
 }
 
-
-// export const generatePatternPulsar=(g, rowsNum, colsNum, gridCopy)=>{
-//   g.map((rows, i)=>
-//   rows.map((cols, j)=>{
-//     if(  i - 2 === Math.trunc(rowsNum / 2)   && j + 5 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-//     if(  i - 2  === Math.trunc(rowsNum / 2)  && j + 4 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-//     if(  i - 2  === Math.trunc(rowsNum / 2)  && j + 3 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-//     if(  i + 2 - 2  === Math.trunc(rowsNum / 2)   && j + 7 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-//     if(  i + 3 - 2  === Math.trunc(rowsNum / 2)   && j + 7 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-//     if(  i + 4 - 2  === Math.trunc(rowsNum / 2)   && j + 7 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-//     if(  i +5 - 2  === Math.trunc(rowsNum / 2)   && j + 5 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-//     if(  i +5 - 2  === Math.trunc(rowsNum / 2)  && j + 4 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-//     if(  i  +5 - 2 === Math.trunc(rowsNum / 2)  && j + 3 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-//     if(  i + 2 - 2 === Math.trunc(rowsNum / 2)   && j + 7 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-//     if(  i + 4 - 2  === Math.trunc(rowsNum / 2)   && j + 2 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-//     if(  i + 3 - 2  === Math.trunc(rowsNum / 2)   && j + 2 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-//     if(  i + 2 - 2  === Math.trunc(rowsNum / 2)   && j + 2 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-
-
-//     if(  i + 5 === Math.trunc(rowsNum / 2)   && j + 5 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-//     if(  i  + 5 === Math.trunc(rowsNum / 2)  && j + 4 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-//     if(  i+ 5 === Math.trunc(rowsNum / 2)  && j + 3 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-//     if(  i + 2  + 5=== Math.trunc(rowsNum / 2)   && j + 7 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-//     if(  i + 3 + 5 === Math.trunc(rowsNum / 2)   && j + 7 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-//     if(  i + 4 + 5=== Math.trunc(rowsNum / 2)   && j + 7 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-//     if(  i +5 + 5 === Math.trunc(rowsNum / 2)   && j + 5 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-//     if(  i +5 + 5 === Math.trunc(rowsNum / 2)  && j + 4 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-//     if(  i  +5 + 5=== Math.trunc(rowsNum / 2)  && j + 3 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-//     if(  i + 2  + 5=== Math.trunc(rowsNum / 2)   && j + 7 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-   
-//     if(  i + 3 + 5 === Math.trunc(rowsNum / 2)   && j + 2 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-//     if(  i + 2  + 5 === Math.trunc(rowsNum / 2)   && j + 2 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-//     if(  i + 2  +4 === Math.trunc(rowsNum / 2)   && j + 2 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-    
-
-
-//     if(  i  + 10=== Math.trunc(rowsNum / 2)   && j - 1 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-//     if(  i  + 10 === Math.trunc(rowsNum / 2)   && j - 2 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-//     if(  i  + 10 === Math.trunc(rowsNum / 2)   && j - 3 === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-//     if(  i  + 8 === Math.trunc(rowsNum / 2)   && j  === Math.trunc(colsNum / 2)   ){
-//       gridCopy[i][j] = 1
-//     }
-
-
-//   })
-// )
-// }
 
