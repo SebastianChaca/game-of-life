@@ -88,8 +88,7 @@ function App() {
             setCols={setCols}
             setGrid={setGrid}
             rows={rowsNum} 
-            cols={colsNum}
-           
+            cols={colsNum}           
           />
           <Btn title={'Patterns'} handleFunction={handlePatternsModal}/>
           <Settings onOpen={onOpen}/>

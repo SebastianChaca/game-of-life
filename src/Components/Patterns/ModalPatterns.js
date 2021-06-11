@@ -33,19 +33,14 @@ const ModalPatterns = ({isOpen, onClose, rows, cols, setGrid}) => {
          })      
        });
    }else if (value==='3'){
-      const rowsA = [];
+      const rowsArray = [];
       for (let i = 0; i < rows; i++) {
-        rowsA.push(
+        rowsArray.push(
           Array.from(Array(cols), () => (Math.random() > 0.7 ? 1 : 0))
         );
       }
-
-      setGrid(rowsA);
+      setGrid(rowsArray);
    }
-   
-   
-    
-    
    
   },[value])
   return (
