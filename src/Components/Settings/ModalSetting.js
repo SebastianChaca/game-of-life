@@ -65,7 +65,7 @@ const ModalSetting = ({isOpen, onClose, rows, cols,intervalLoop, setIntervalLoop
           <BtnSettings icon={<MinusIcon/>}  handleFunction={()=>sub(setIntervalLoop, intervalLoop, 'Interval')}/>              
       </Flex>
       <Flex alignItems='center'>     
-          <TextComp title={'Color Theme'} state={intervalLoop}/>
+          <TextComp title={'Color Theme'} />
           <Spacer/>
           <ColorModeSwitcher/>           
       </Flex>
