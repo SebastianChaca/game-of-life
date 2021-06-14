@@ -38,6 +38,19 @@ function App() {
       setGeneration(0)
     }
   },[])
+  //funcion que maneja un solo paso del algoritmo del juego
+  const handleStep=()=>{
+    setGrid(g => {
+       //la funcion produce de immer recibe el estado de la grilla sin mutarlo y 
+        //genera un nuevo estado  con los nuevos valores
+        //https://immerjs.github.io/immer/produce      
+      return produce(g, gridCopy => {
+        return generateGrid(g, rowsNum, colsNum, gridCopy)
+      })
+        
+    });
+    setGeneration((generation)=> generation + 1)   
+  }
 
 //efecto que chequea el estado de running para disparar una funcion de intervalos 
 //que dispara el agoritmo del juego
@@ -45,16 +58,7 @@ function App() {
   let interval=null
    if(running){
     interval=setInterval(()=>{
-      setGrid(g => {
-        //la funcion produce de immer recibe el estado de la grilla sin mutarlo y 
-        //genera un nuevo estado  con los nuevos valores
-        //https://immerjs.github.io/immer/produce
-        return produce(g, gridCopy => {
-          return generateGrid(g, rowsNum, colsNum, gridCopy)
-        })
-          
-      });
-      setGeneration((generation)=> generation + 1)       
+     handleStep()     
     }, intervalLoop)
    }
    return ()=>{
@@ -76,10 +80,12 @@ function App() {
   const handlePatternsModal=()=>{
     setModalPatterns(!modalPatterns)
   }
+  
   return (
     <Box   m='auto' p='20px'>    
       <Flex alignItems='center' display={{base:'block', sm:'block', md:'flex', lg:'flex'}} >
           <Btn title={running ? 'Stop' : 'Start'} handleFunction={handleRunning} />
+          <Btn title='x1' handleFunction={handleStep} />  
           <Btn title='Restart' handleFunction={handleReset}/>        
           <TextComp title='Interval' state={intervalLoop}/>
           <TextComp title='Generation' state={generation}/>
