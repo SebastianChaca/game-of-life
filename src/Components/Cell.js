@@ -1,14 +1,13 @@
 import React from 'react'
 import {Box } from '@chakra-ui/react'
+import produce from "immer";
 const Cell = ({i, j, grid, setGrid}) => {
   return (
     <Box 
       onClick={()=> {
-        //copio el estado en una variable nueva
-        const newGrid=[...grid]
-        //chequeo si en la posicion donde se encuentro la celula esta viva o muerta. 0 === muerta, 1 === viva
-        //y la cambio a su valor opuesto
-        newGrid[i][j]= grid[i][j] ? 0 : 1
+       const newGrid= produce(grid, gridCopy => {
+         gridCopy[i][j] = grid[i][j]? 0 : 1
+       })        
         localStorage.setItem('grid', JSON.stringify(newGrid))
         setGrid(newGrid)
       }} 
