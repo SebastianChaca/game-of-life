@@ -16,24 +16,21 @@ const operations = [
   [1, 0],
   [-1, 0]
 ]
+//hacer circular la grilla
+const countNeighbors = (grid, x, y, rowsNum, colsNum) => {
+  return operations.reduce((acc, [i, j]) => {
+    const row = (x + i + rowsNum) % rowsNum;
+    const col = (y + j + colsNum) % colsNum;
+    acc += grid[row][col];
+    return acc;
+  }, 0);
+};
+
 export const generateGrid=(g, rowsNum, colsNum, gridCopy)=>{
     g.map((rows, i)=>
     rows.map((cols, j)=>{
-      let neighbors = 0 
-      operations.forEach(([x, y]) => {
-        //esto equivale a :
-        // if(gridCopy[i - 1][j - 1 ] === 1){
-        // neighbors += 1 }
-        // asi evito hacer las 8 operaciones
-        const newI = i + x;
-        const newJ = j + y;
-        //validacion para que no se chequeen los index que estan en los limites de la grilla
-        //no pude hacer la grilla esferica asi que encontre esta forma de darle limites        
-        if (newI >= 0 && newI < rowsNum && newJ >= 0 && newJ < colsNum) {
-          neighbors += g[newI][newJ];
-        }
-      });
-      //si tiene menos de dos vecinos o mas de 3 la celula muere
+      let neighbors = countNeighbors(g, i, j, rowsNum, colsNum)       
+      
       if (neighbors < 2 || neighbors > 3) {
         gridCopy[i][j] = 0;
       //si la celula esta muerta y tiene mas de 3 vecinos se reproduce
